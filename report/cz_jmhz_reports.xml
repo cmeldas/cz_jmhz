@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_payslip" model="ir.actions.report">
+        <field name="name">Výplatní páska</field>
+        <field name="model">cz.jmhz.report.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cz_jmhz.report_payslip</field>
+        <field name="report_file">cz_jmhz.report_payslip</field>
+        <field name="print_report_name">'Vyplatni_paska_%s_%s' % (object.employee_id.name, object.period.strftime('%Y_%m'))</field>
+        <field name="binding_model_id" ref="model_cz_jmhz_report_line"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_payroll_record" model="ir.actions.report">
+        <field name="name">Mzdový list</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cz_jmhz.report_payroll_record</field>
+        <field name="report_file">cz_jmhz.report_payroll_record</field>
+        <field name="print_report_name">'Mzdovy_list_%s' % (object.name)</field>
+    </record>
+
+    <template id="report_payslip_document">
+        <t t-call="web.external_layout">
+            <t t-set="employee" t-value="line.employee_id.sudo()"/>
+            <div class="page">
+                <h3>Výplatní páska za <t t-out="line.period.strftime('%m/%Y')"/></h3>
+                <p>
+                    <strong>Zaměstnavatel:</strong> <t t-out="line.company_id._jmhz_employer_name()"/><br/>
+                    <strong>Brigádník:</strong> <t t-out="employee.name"/><br/>
+                    <strong>Dohoda o provedení práce:</strong> <t t-out="line.employment_id.name"/><t t-if="line.employment_id.position_name">, <t t-out="line.employment_id.position_name"/></t>
+                </p>
+                <table class="table table-sm">
+                    <tbody>
+                        <tr><td>Odpracované hodiny</td><td class="text-end"><t t-out="'%.2f' % line.hours"/> h</td></tr>
+                        <tr t-if="line.hourly_rate"><td>Hodinová sazba</td><td class="text-end"><t t-out="'%.2f' % line.hourly_rate"/> Kč</td></tr>
+                        <tr><td>Odměna za práci</td><td class="text-end"><t t-out="'{:,}'.format(line.amount - line.bonus_amount - line.vacation_amount).replace(',', ' ')"/> Kč</td></tr>
+                        <tr t-if="line.bonus_amount"><td>Bonusy a odměny</td><td class="text-end"><t t-out="'{:,}'.format(line.bonus_amount).replace(',', ' ')"/> Kč</td></tr>
+                        <tr t-if="line.vacation_amount"><td>Náhrada za dovolenou</td><td class="text-end"><t t-out="'{:,}'.format(line.vacation_amount).replace(',', ' ')"/> Kč</td></tr>
+                        <tr class="fw-bold"><td>Hrubá odměna celkem</td><td class="text-end"><t t-out="'{:,}'.format(line.amount).replace(',', ' ')"/> Kč</td></tr>
+                        <tr t-if="line.tax_mode == 'withholding'"><td>Srážková daň 15 %</td><td class="text-end"><t t-if="line.tax_amount">−</t><t t-out="'{:,}'.format(line.tax_amount).replace(',', ' ')"/> Kč</td></tr>
+                        <t t-else="">
+                            <tr><td>Vypočtená záloha na daň</td><td class="text-end"><t t-out="'{:,}'.format(line.tax_computed).replace(',', ' ')"/> Kč</td></tr>
+                            <tr t-if="line.tax_credit"><td>Sleva na poplatníka</td><td class="text-end">−<t t-out="'{:,}'.format(line.tax_credit).replace(',', ' ')"/> Kč</td></tr>
+                            <tr><td>Záloha na daň po slevě</td><td class="text-end"><t t-if="line.tax_amount">−</t><t t-out="'{:,}'.format(line.tax_amount).replace(',', ' ')"/> Kč</td></tr>
+                        </t>
+                        <tr><td>Pojistné</td><td class="text-end">0 Kč (dohoda pod rozhodným příjmem)</td></tr>
+                        <tr class="fw-bold"><td>Čistá odměna</td><td class="text-end"><t t-out="'{:,}'.format(line.net_amount).replace(',', ' ')"/> Kč</td></tr>
+                    </tbody>
+                </table>
+                <p class="text-muted small">
+                    Prohlášení poplatníka: <t t-out="'ano' if line.has_declaration else 'ne'"/>.
+                    Doklad podle § 143 zákoníku práce.
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="line">
+                <t t-call="cz_jmhz.report_payslip_document"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_payroll_record">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="employee">
+                <t t-set="lines" t-value="lines_by_employee.get(employee.id)"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3>Mzdový list za rok <t t-out="year"/></h3>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Brigádník:</strong> <t t-out="employee.name"/><br/>
+                                <strong>Rodné číslo:</strong> <t t-out="employee.ssnid or ''"/><br/>
+                                <strong>Datum narození:</strong> <t t-out="employee.birthday and employee.birthday.strftime('%d. %m. %Y') or ''"/><br/>
+                                <strong>Trvalý pobyt:</strong>
+                                <t t-out="' '.join(filter(None, [employee.private_street, employee.jmhz_house_number]))"/>,
+                                <t t-out="employee.private_zip or ''"/> <t t-out="employee.private_city or ''"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Zaměstnavatel:</strong> <t t-out="employee.company_id._jmhz_employer_name()"/><br/>
+                                <strong>Zdravotní pojišťovna:</strong> <t t-out="employee.jmhz_health_insurer or ''"/><br/>
+                                <strong>OIČ:</strong> <t t-out="employee.jmhz_ik_mpsv or ''"/><br/>
+                                <strong>Dohody:</strong>
+                                <t t-foreach="employee.jmhz_employment_ids" t-as="employment">
+                                    <t t-out="employment.date_start.strftime('%d. %m. %Y')"/>–<t t-out="employment.date_end and employment.date_end.strftime('%d. %m. %Y') or '…'"/><t t-if="not employment_last">, </t>
+                                </t>
+                            </div>
+                        </div>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Měsíc</th>
+                                    <th class="text-end">Hodiny</th>
+                                    <th class="text-end">Zúčtováno</th>
+                                    <th class="text-end">z toho bonusy</th>
+                                    <th class="text-end">z toho dovolená</th>
+                                    <th>Režim daně</th>
+                                    <th class="text-end">Základ</th>
+                                    <th class="text-end">Sleva</th>
+                                    <th class="text-end">Daň</th>
+                                    <th class="text-end">Čistá</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="lines" t-as="line">
+                                    <td><t t-out="line.period.strftime('%m/%Y')"/></td>
+                                    <td class="text-end"><t t-out="'%.2f' % line.hours"/></td>
+                                    <td class="text-end"><t t-out="line.amount"/></td>
+                                    <td class="text-end"><t t-out="line.bonus_amount"/></td>
+                                    <td class="text-end"><t t-out="line.vacation_amount"/></td>
+                                    <td><t t-out="'záloha' if line.tax_mode != 'withholding' else 'srážková'"/><t t-if="line.has_declaration">, prohlášení</t></td>
+                                    <td class="text-end"><t t-out="line.tax_base"/></td>
+                                    <td class="text-end"><t t-out="line.tax_credit"/></td>
+                                    <td class="text-end"><t t-out="line.tax_amount"/></td>
+                                    <td class="text-end"><t t-out="line.net_amount"/></td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Celkem</td>
+                                    <td class="text-end"><t t-out="'%.2f' % sum(lines.mapped('hours'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('amount'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('bonus_amount'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('vacation_amount'))"/></td>
+                                    <td/>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('tax_base'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('tax_credit'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('tax_amount'))"/></td>
+                                    <td class="text-end"><t t-out="sum(lines.mapped('net_amount'))"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-muted small">Částky v Kč. Mzdový list podle § 38j zákona o daních z příjmů; uchovávat podle předpisů o archivaci.</p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

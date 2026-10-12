@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://schemas.cssz.cz/JMHZ/form/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://schemas.cssz.cz/JMHZ/form/1.0" elementFormDefault="qualified"
+           version="1.4.3">
+
+  <xs:include schemaLocation="formBezPriznaku.xsd"/>
+  <xs:include schemaLocation="formPestoun.xsd"/>
+  <xs:include schemaLocation="formCinnostKS.xsd"/>
+  <xs:include schemaLocation="formVezen.xsd"/>
+  <xs:include schemaLocation="formMezinarodniPronajemSily.xsd"/>
+  <xs:include schemaLocation="formJinyPrijem.xsd"/>
+  <xs:include schemaLocation="formOzpTpp.xsd"/>
+  <xs:include schemaLocation="formOdlozenyPrijem.xsd"/>
+
+</xs:schema>

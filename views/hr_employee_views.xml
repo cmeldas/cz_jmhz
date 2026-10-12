@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_cz_jmhz" model="ir.ui.view">
+        <field name="name">hr.employee.form.cz.jmhz</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_jmhz_employments" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                        groups="cz_jmhz.group_cz_jmhz_manager" invisible="not jmhz_employment_count">
+                    <field name="jmhz_employment_count" widget="statinfo" string="Dohody"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="cz_jmhz" string="JMHZ" groups="cz_jmhz.group_cz_jmhz_manager">
+                    <p class="text-muted">
+                        Údaje pro přihlášku na ČSSZ a měsíční hlášení. Jsou potřeba jen u brigádníků na dohodu o provedení práce.
+                    </p>
+                    <group>
+                        <group string="Jméno">
+                            <field name="jmhz_first_name"/>
+                            <field name="jmhz_last_name"/>
+                            <field name="jmhz_title"/>
+                            <field name="jmhz_birth_surname"/>
+                        </group>
+                        <group string="Narození a občanství">
+                            <field name="birthday"/>
+                            <field name="place_of_birth"/>
+                            <field name="country_of_birth"/>
+                            <field name="sex" string="Pohlaví"/>
+                            <field name="country_id" string="Státní občanství"/>
+                            <field name="ssnid" string="Rodné číslo"/>
+                        </group>
+                        <group string="Trvalý pobyt">
+                            <field name="private_street" string="Ulice (bez čísla)"/>
+                            <field name="jmhz_house_number"/>
+                            <field name="jmhz_orientation_number"/>
+                            <field name="private_zip" string="PSČ"/>
+                            <field name="private_city" string="Obec"/>
+                            <field name="private_country_id" string="Stát"/>
+                            <field name="jmhz_ruian_code"/>
+                        </group>
+                        <group string="Pojištění, vzdělání, ČSSZ">
+                            <field name="jmhz_health_insurer"/>
+                            <field name="jmhz_education"/>
+                            <field name="jmhz_tax_residence_id"/>
+                            <field name="jmhz_pension_type"/>
+                            <field name="jmhz_pension_from" invisible="not jmhz_pension_type"/>
+                            <field name="jmhz_pension_early"/>
+                            <field name="jmhz_ik_mpsv"/>
+                            <field name="hourly_cost" string="Hodinová sazba"/>
+                        </group>
+                    </group>
+                    <separator string="Prohlášení poplatníka"/>
+                    <field name="jmhz_tax_declaration_ids">
+                        <list editable="bottom">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="document" filename="document_name" widget="binary"/>
+                            <field name="document_name" column_invisible="True"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                    <separator string="Dohody o provedení práce"/>
+                    <field name="jmhz_employment_ids" readonly="1">
+                        <list>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="position_name"/>
+                            <field name="id_ppv"/>
+                            <field name="registration_state"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

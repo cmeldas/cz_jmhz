@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cz_jmhz_employment_view_list" model="ir.ui.view">
+        <field name="name">cz.jmhz.employment.list</field>
+        <field name="model">cz.jmhz.employment</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="registration_state in ('deregistered', 'cancelled')">
+                <field name="employee_id"/>
+                <field name="position_name" optional="show"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="activity_code" optional="hide"/>
+                <field name="id_ppv" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="registration_state" widget="badge" decoration-success="registration_state == 'registered'" decoration-warning="registration_state in ('draft', 'sent', 'deregistration_sent')"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_employment_view_form" model="ir.ui.view">
+        <field name="name">cz.jmhz.employment.form</field>
+        <field name="model">cz.jmhz.employment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_registration" type="object" string="Přihláška na ČSSZ" class="btn-primary"
+                            invisible="registration_state != 'draft'"/>
+                    <button name="action_registration" type="object" string="Přihláška znovu"
+                            invisible="registration_state != 'sent'"/>
+                    <button name="action_mark_registered" type="object" string="Přihlášeno (ID doplněna)" class="btn-primary"
+                            invisible="registration_state != 'sent'"/>
+                    <button name="action_change" type="object" string="Změna údajů"
+                            invisible="registration_state != 'registered'"/>
+                    <button name="action_deregistration" type="object" string="Odhláška"
+                            invisible="registration_state != 'registered'"/>
+                    <button name="action_mark_deregistered" type="object" string="Odhlášeno"
+                            invisible="registration_state != 'deregistration_sent'"/>
+                    <button name="action_storno" type="object" string="Storno (nenastoupil)"
+                            invisible="registration_state not in ('sent', 'registered')"
+                            confirm="Storno se podává, když brigádník do práce nenastoupil. Pokračovat?"/>
+                    <field name="registration_state" widget="statusbar" statusbar_visible="draft,sent,registered,deregistered"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="fa-file-code-o">
+                            <field name="submission_count" widget="statinfo" string="Podání"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="registration_state != 'draft'">
+                        Přihláška na ČSSZ musí odejít <b>nejpozději před nástupem</b> k výkonu práce (nejdřív 8 dní předem).
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="registration_state != 'sent'">
+                        Po zpracování přihlášky doplňte z protokolu ČSSZ (nebo z ePortálu, služba Seznam zaměstnanců)
+                        osobní identifikační číslo brigádníka a identifikátor zaměstnání a klikněte na „Přihlášeno“.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Dohoda">
+                            <field name="employee_id" readonly="registration_state != 'draft'"/>
+                            <field name="date_contract"/>
+                            <field name="date_start" readonly="registration_state not in ('draft', 'sent')"/>
+                            <field name="date_end"/>
+                            <field name="activity_code" readonly="registration_state != 'draft'"/>
+                            <field name="planned_hours_month"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Pozice a místo práce">
+                            <field name="position_name"/>
+                            <field name="isco_code" placeholder="např. 52230"/>
+                            <field name="work_city"/>
+                            <field name="work_city_code"/>
+                        </group>
+                        <group string="Identifikátory od ČSSZ">
+                            <field name="employee_ik_mpsv"/>
+                            <field name="id_ppv"/>
+                        </group>
+                        <group string="Doklady">
+                            <field name="signed_document" filename="signed_document_name"/>
+                            <field name="signed_document_name" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Poznámka…"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_employment_view_search" model="ir.ui.view">
+        <field name="name">cz.jmhz.employment.search</field>
+        <field name="model">cz.jmhz.employment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="id_ppv"/>
+                <filter name="to_register" string="K přihlášení" domain="[('registration_state', '=', 'draft')]"/>
+                <filter name="registered" string="Přihlášené" domain="[('registration_state', '=', 'registered')]"/>
+                <filter name="to_deregister" string="K odhlášení"
+                        domain="[('registration_state', '=', 'registered'), ('date_end', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="archived" string="Archivované" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_state" string="Stav u ČSSZ" context="{'group_by': 'registration_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_employment_action" model="ir.actions.act_window">
+        <field name="name">Dohody o provedení práce</field>
+        <field name="res_model">cz.jmhz.employment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Založte dohodu o provedení práce</p>
+            <p>Každou dohodu je nutné přihlásit na ČSSZ před nástupem brigádníka a po skončení odhlásit do 8 dnů.</p>
+        </field>
+    </record>
+</odoo>

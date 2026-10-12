@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cz_jmhz_root" name="JMHZ" sequence="76" web_icon="cz_jmhz,static/description/icon.png"
+              groups="cz_jmhz.group_cz_jmhz_manager"/>
+    <menuitem id="menu_cz_jmhz_reports" name="Měsíční hlášení" parent="menu_cz_jmhz_root"
+              action="cz_jmhz_report_action" sequence="10"/>
+    <menuitem id="menu_cz_jmhz_employments" name="Dohody" parent="menu_cz_jmhz_root"
+              action="cz_jmhz_employment_action" sequence="20"/>
+    <menuitem id="menu_cz_jmhz_employees" name="Brigádníci" parent="menu_cz_jmhz_root"
+              action="cz_jmhz_employee_action" sequence="30"/>
+    <menuitem id="menu_cz_jmhz_submissions" name="Podání" parent="menu_cz_jmhz_root"
+              action="cz_jmhz_submission_action" sequence="40"/>
+    <menuitem id="menu_cz_jmhz_config" name="Konfigurace" parent="menu_cz_jmhz_root" sequence="90"/>
+    <menuitem id="menu_cz_jmhz_settings" name="Nastavení" parent="menu_cz_jmhz_config"
+              action="cz_jmhz_config_settings_action" sequence="10"/>
+    <menuitem id="menu_cz_jmhz_tax_declarations" name="Prohlášení poplatníka" parent="menu_cz_jmhz_config"
+              action="cz_jmhz_tax_declaration_action" sequence="20"/>
+    <menuitem id="menu_cz_jmhz_year_params" name="Parametry roku" parent="menu_cz_jmhz_config"
+              action="cz_jmhz_year_param_action" sequence="30"/>
+</odoo>

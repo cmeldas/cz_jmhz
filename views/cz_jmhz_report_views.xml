@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cz_jmhz_report_line_view_list" model="ir.ui.view">
+        <field name="name">cz.jmhz.report.line.list</field>
+        <field name="model">cz.jmhz.report.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-danger="check_level == 'error'" decoration-warning="check_level == 'warning'">
+                <field name="report_state" column_invisible="True"/>
+                <field name="form_sent" column_invisible="True"/>
+                <field name="employee_id" readonly="1"/>
+                <field name="employment_id" optional="hide" options="{'no_create': True}" readonly="form_sent or report_state in ('sent', 'accepted')"/>
+                <field name="amount" string="Zúčtováno" sum="Celkem" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="bonus_amount" string="Bonusy" optional="hide" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="vacation_amount" string="Dovolená" optional="hide" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="hours" string="Hodiny" sum="Celkem" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="has_attendance" string="Docházka" optional="show" readonly="1"/>
+                <field name="days_worked" string="Dny" optional="hide" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="planned_hours" string="Rozsah" optional="hide" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="hourly_rate" string="Sazba" optional="hide" readonly="report_state in ('sent', 'accepted')"/>
+                <field name="standard_fund" string="Fond" optional="hide"/>
+                <field name="tax_mode" string="Režim daně" optional="show"/>
+                <field name="tax_amount" string="Daň" sum="Celkem"/>
+                <field name="net_amount" string="Čistá" sum="Celkem"/>
+                <field name="check_level" widget="badge" decoration-success="check_level == 'ok'" decoration-info="check_level == 'info'" decoration-warning="check_level == 'warning'" decoration-danger="check_level == 'error'"/>
+                <field name="check_message" optional="hide"/>
+                <field name="form_rejected" optional="hide" column_invisible="parent.state != 'correction'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_report_line_view_form" model="ir.ui.view">
+        <field name="name">cz.jmhz.report.line.form</field>
+        <field name="model">cz.jmhz.report.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="report_state" invisible="1"/>
+                <sheet>
+                    <group>
+                        <group string="Brigádník a dohoda">
+                            <field name="employee_id"/>
+                            <field name="employment_id" readonly="1"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group string="Odměna">
+                            <field name="amount" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="bonus_amount" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="vacation_amount" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="tax_mode"/>
+                            <field name="tax_base"/>
+                            <field name="tax_computed"/>
+                            <field name="tax_credit"/>
+                            <field name="tax_amount"/>
+                            <field name="net_amount"/>
+                        </group>
+                        <group string="Pracovní doba">
+                            <field name="hours" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="has_attendance"/>
+                            <field name="days_worked" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="planned_hours" readonly="report_state in ('sent', 'accepted')"/>
+                            <field name="standard_fund"/>
+                            <field name="hourly_rate" readonly="report_state in ('sent', 'accepted')"/>
+                        </group>
+                        <group string="Formulář ČSSZ">
+                            <field name="form_guid"/>
+                            <field name="form_sent"/>
+                            <field name="form_rejected"/>
+                            <field name="check_level"/>
+                        </group>
+                    </group>
+                    <field name="check_message" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_report_view_list" model="ir.ui.view">
+        <field name="name">cz.jmhz.report.list</field>
+        <field name="model">cz.jmhz.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="deadline"/>
+                <field name="amount_total"/>
+                <field name="tax_total" optional="show"/>
+                <field name="withholding_total" optional="show"/>
+                <field name="error_count" optional="show"/>
+                <field name="warning_count" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'accepted'" decoration-info="state in ('ready', 'sent')" decoration-warning="state == 'correction'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_report_view_form" model="ir.ui.view">
+        <field name="name">cz.jmhz.report.form</field>
+        <field name="model">cz.jmhz.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_fill_lines" type="object" string="Načíst dohody" invisible="state not in ('draft', 'correction')"/>
+                    <button name="action_load_hours" type="object" string="Načíst hodiny z docházky" invisible="state not in ('draft', 'correction')"
+                            confirm="Hodiny a dny se přepíšou hodnotami z docházky. Pokračovat?"/>
+                    <button name="action_prepare" type="object" string="Připravit XML" class="btn-primary" invisible="state not in ('draft', 'correction')"/>
+                    <button name="action_download" type="object" string="Stáhnout XML" class="btn-primary" invisible="state != 'ready'"/>
+                    <button name="action_mark_sent" type="object" string="Označit jako podané" invisible="state != 'ready'"
+                            confirm="Nahráli jste XML na ePortál ČSSZ a odeslali ho? Podané hlášení se uzamkne."/>
+                    <button name="action_mark_accepted" type="object" string="Přijato" invisible="state != 'sent'"/>
+                    <button name="action_mark_rejected" type="object" string="Zamítnuto" invisible="state != 'sent'"
+                            confirm="Celé podání ČSSZ zamítla (technická vada)? Řádné hlášení se pak podává znovu s novým GUID, opravné znovu jako opravné."/>
+                    <button name="action_start_correction" type="object" string="Opravné hlášení" invisible="state not in ('sent', 'accepted')"/>
+                    <button name="action_print_payslips" type="object" string="Výplatní pásky" invisible="not line_ids"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,ready,sent,accepted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="fa-file-code-o">
+                            <field name="submission_count" widget="statinfo" string="Podání"/>
+                        </button>
+                    </div>
+                    <div class="alert alert-info" role="alert" invisible="state != 'ready'">
+                        XML je připravené. Stáhněte ho, na <a href="https://eportal.cssz.cz" target="_blank">ePortálu ČSSZ</a>
+                        ho nahrajte službou <b>Podání nahráním dat z účetního systému</b> (ne „Načíst tiskopis ze souboru“),
+                        nechte zkontrolovat a odešlete. Potom hlášení označte jako podané.
+                    </div>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'correction'">
+                        Opravné hlášení: pošle se se stejným GUID jako řádné podání. Formuláře, které ČSSZ zamítla, označte ve sloupci „Formulář zamítnut“.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="period" readonly="guid"/>
+                            <field name="deadline"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="amount_total"/>
+                            <field name="tax_total"/>
+                            <field name="withholding_total"/>
+                            <field name="net_total"/>
+                            <field name="hours_total"/>
+                            <field name="guid"/>
+                        </group>
+                    </group>
+                    <p class="text-muted">
+                        Částku za měsíc zapište ručně. Hodiny jsou skutečně odpracované: načtou se z docházky, nebo je zapište ručně;
+                        z částky se nedopočítávají. Řádek se zelenou kontrolou je v pořádku, červený (chyba) brání sestavení XML.
+                    </p>
+                    <field name="line_ids" readonly="state in ('sent', 'accepted')"/>
+                    <group string="Kontroly" invisible="not check_overview">
+                        <field name="check_overview" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_report_view_search" model="ir.ui.view">
+        <field name="name">cz.jmhz.report.search</field>
+        <field name="model">cz.jmhz.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="not_sent" string="Nepodané" domain="[('state', 'in', ('draft', 'ready', 'correction'))]"/>
+                <filter name="sent" string="Podané" domain="[('state', 'in', ('sent', 'accepted'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_report_action" model="ir.actions.act_window">
+        <field name="name">Měsíční hlášení</field>
+        <field name="res_model">cz.jmhz.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Založte hlášení za měsíc</p>
+            <p>Hlášení se podává za každý měsíc, kdy trvala aspoň jedna dohoda, do 20. dne následujícího měsíce.
+               V ostrém režimu ho na začátku měsíce založí cron sám.</p>
+        </field>
+    </record>
+</odoo>

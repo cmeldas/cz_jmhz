@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="year_param_2026" model="cz.jmhz.year.param">
+        <field name="year">2026</field>
+        <field name="legal_limit">12000</field>
+        <field name="taxpayer_credit">2570</field>
+        <field name="tax_rate">15.0</field>
+        <field name="withholding_tax" eval="True"/>
+        <field name="min_hourly_wage">134.40</field>
+        <field name="verified" eval="True"/>
+        <field name="note">Rozhodný příjem DPP 12 000 Kč (sdělení MPSV č. 396/2025 Sb.), minimální mzda 134,40 Kč/h, sleva na poplatníka 30 840 Kč/rok. Srážková daň u DPP pod limitem bez prohlášení poplatníka.</field>
+    </record>
+
+    <record id="year_param_2027" model="cz.jmhz.year.param">
+        <field name="year">2027</field>
+        <field name="legal_limit">12000</field>
+        <field name="taxpayer_credit">2570</field>
+        <field name="tax_rate">15.0</field>
+        <field name="withholding_tax" eval="False"/>
+        <field name="min_hourly_wage">148.30</field>
+        <field name="verified" eval="False"/>
+        <field name="note">NEOVĚŘENO: rozhodný příjem DPP pro rok 2027 (25 % průměrné mzdy) a výši slevy ověřit podle vyhlášených hodnot. Minimální mzda 148,30 Kč/h podle zveřejněných informací. Od 1. 1. 2027 srážková daň u DPP končí, bez prohlášení se strhává záloha bez slevy.</field>
+    </record>
+</odoo>

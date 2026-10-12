@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_cz_jmhz" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cz.jmhz</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="JMHZ" string="JMHZ" name="cz_jmhz" groups="cz_jmhz.group_cz_jmhz_manager">
+                    <block title="Zaměstnavatel u ČSSZ" name="cz_jmhz_employer">
+                        <setting string="Variabilní symbol" company_dependent="1"
+                                 help="Desetimístný variabilní symbol zaměstnavatele přidělený ČSSZ.">
+                            <field name="jmhz_variable_symbol"/>
+                        </setting>
+                        <setting string="Kód OSSZ" company_dependent="1"
+                                 help="Trojmístný kód okresní správy sociálního zabezpečení (pro přihlášky brigádníků).">
+                            <field name="jmhz_ossz_code"/>
+                        </setting>
+                        <setting string="Název zaměstnavatele" company_dependent="1"
+                                 help="Jak se zaměstnavatel uvádí v přihláškách; prázdné = název firmy.">
+                            <field name="jmhz_employer_name"/>
+                        </setting>
+                        <setting string="Místo výkonu práce" company_dependent="1"
+                                 help="U dohod sídlo zaměstnavatele: obec a její šestimístný kód. Výchozí hodnota pro nové dohody.">
+                            <div class="content-group">
+                                <div class="row"><label for="jmhz_work_city" class="col-lg-4"/><field name="jmhz_work_city"/></div>
+                                <div class="row"><label for="jmhz_work_city_code" class="col-lg-4"/><field name="jmhz_work_city_code"/></div>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Podání a připomínky" name="cz_jmhz_submissions">
+                        <setting string="E-mail pro protokoly" company_dependent="1"
+                                 help="Uvede se v podání, ČSSZ na něj pošle protokol o zpracování.">
+                            <field name="jmhz_notification_email"/>
+                        </setting>
+                        <setting string="Odpovědná osoba" company_dependent="1"
+                                 help="Dostává připomínky: přihláška před nástupem, hlášení do 20. dne, odhláška.">
+                            <field name="jmhz_responsible_user_id"/>
+                        </setting>
+                        <setting string="Ostrý režim" company_dependent="1"
+                                 help="Jen v ostrém režimu cron zakládá měsíční hlášení a plánuje připomínky. Na lokálních kopiích databáze nechat vypnuté.">
+                            <field name="jmhz_live_mode"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Nastavení</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'cz_jmhz', 'bin_size': False}</field>
+    </record>
+</odoo>

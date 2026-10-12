@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://schemas.cssz.cz/JMHZ/souhrn/1.0"
+           xmlns:bt="http://schemas.cssz.cz/baseTypes/v2"
+           targetNamespace="http://schemas.cssz.cz/JMHZ/souhrn/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified"
+           version="1.4.3">
+
+  <xs:import namespace="http://schemas.cssz.cz/baseTypes/v2" schemaLocation="baseTypes2.xsd"/>
+
+  <xs:element name="souhrn" type="souhrnType"/>
+  <xs:complexType name="souhrnType">
+    <xs:sequence>
+      <xs:element name="danUdajeMesic">
+        <xs:annotation>
+          <xs:documentation>Daňové údaje za hlášený měsíc</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="danZalohaPoSleve" type="cislo14Type">
+              <xs:annotation>
+                <xs:documentation>Úhrn skutečně sražených záloh na dani po slevách
+DS: Souhrnná vrstva > Daňové údaje (ID 10034)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="danBonus" type="cislo14Type" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Úhrn vyplacených měsíčních daňových bonusů
+DS: Souhrnná vrstva > Daňové údaje (ID 10035)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="danUdajeRok" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Daňové údaje za rok. Uváděné v měsíci lednu nebo únoru nebo březnu.
+Období 010203</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="danPreplatek" type="cisloN14Type">
+              <xs:annotation>
+                <xs:documentation>Úhrn přeplatků na dani a nedoplatků daně z ročního zúčtování
+DS: Souhrnná vrstva > Daňové údaje (ID 10036)
+Období 010203</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="danBonusDoplatek" type="cisloN14Type">
+              <xs:annotation>
+                <xs:documentation>Úhrn doplatků na daňových bonusech vyplacených zaměstnancům a vrácených přeplatků daňových bonusů zaměstnanci z ročního zúčtování
+DS: Souhrnná vrstva > Daňové údaje (ID 10037)
+Období 010203</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="zamestnavatelUdajeRok" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Údaje o zaměstnavateli k 31.12. uváděné v prosinci.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="formaVlastnictvi">
+              <xs:annotation>
+                <xs:documentation>Forma
+DS: Zaměstnavatel  / Škola / Vzdělávací zařízení > Hospodářská a finanční kontrola k 31.12. (ID 10220)</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:length value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="zamestnavaniOzp" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Zaměstnávám více než 25 zaměstnanců v pracovním poměru
+SIT06</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="zecPocetPrepRok" type="cislo14_2Type">
+                    <xs:annotation>
+                      <xs:documentation>Průměrný roční přepočtený počet zaměstnanců
+DS: Souhrnná vrstva > Plnění povinného podílu zaměstnávání OZP (ID 10038)</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="zecPocetPrepOzpRok" type="cislo14_2Type">
+                    <xs:annotation>
+                      <xs:documentation>Průměrný roční přepočtený počet zaměstnanců, kteří jsou OZP
+DS: Souhrnná vrstva > Plnění povinného podílu zaměstnávání OZP (ID 10039)</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="podilZamZtp" type="cislo5_2Type">
+                    <xs:annotation>
+                      <xs:documentation>Podíl osob se zdravotním postižením na celkovém počtu zaměstnanců
+DS: Souhrnná vrstva > Plnění povinného podílu zaměstnávání OZP (ID 10452)</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="kolektivniSmlouvy">
+              <xs:annotation>
+                <xs:documentation>Kolektivní smlouvy k 31.12.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="kolektivniSmlouva" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:documentation>Kolektivní smlouva</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="typKolektSmlouvy">
+                          <xs:annotation>
+                            <xs:documentation>Typ kolektivní smlouvy
+DS: Zaměstnavatel  / Škola / Vzdělávací zařízení > Kolektivní smlouva k 31.12. (ID 10214)</xs:documentation>
+                          </xs:annotation>
+                          <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                              <xs:length value="1"/>
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="specifickaSkutecnost" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>V měsíci nastala specifická skutečnost
+IN13</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="typ">
+              <xs:annotation>
+                <xs:documentation>Typ specifické právní skutečnosti
+DS: Zaměstnavatel  / Škola / Vzdělávací zařízení > Specifická právní skutečnost (ID 10408)</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:minLength value="1"/>
+                  <xs:maxLength value="2"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="datum" type="xs:date">
+              <xs:annotation>
+                <xs:documentation>Datum specifické právní skutečnosti
+DS: Zaměstnavatel  / Škola / Vzdělávací zařízení > Datum nastání specifické právní skutečnosti (ID 10409)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="cisloN14Type">
+    <xs:restriction base="bt:simpleNDType">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="14"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cislo14Type">
+    <xs:restriction base="bt:simpleNNType">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="14"/>
+    </xs:restriction>
+  </xs:simpleType>
+ <xs:simpleType name="cislo14_2Type">
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="14"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cislo5_2Type">
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="5"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="icoType">
+    <xs:restriction base="bt:simpleNNType">
+      <xs:length value="8"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

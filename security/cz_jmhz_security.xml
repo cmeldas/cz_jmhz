@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_jmhz" model="res.groups.privilege">
+        <field name="name">JMHZ</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_cz_jmhz_manager" model="res.groups">
+        <field name="name">Správce</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_jmhz"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Dohody o provedení práce, přihlášky na ČSSZ a měsíční hlášení JMHZ včetně osobních údajů brigádníků.</field>
+    </record>
+
+    <record id="cz_jmhz_employment_company_rule" model="ir.rule">
+        <field name="name">JMHZ dohody: více firem</field>
+        <field name="model_id" ref="model_cz_jmhz_employment"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="cz_jmhz_report_company_rule" model="ir.rule">
+        <field name="name">JMHZ hlášení: více firem</field>
+        <field name="model_id" ref="model_cz_jmhz_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="cz_jmhz_report_line_company_rule" model="ir.rule">
+        <field name="name">JMHZ řádky hlášení: více firem</field>
+        <field name="model_id" ref="model_cz_jmhz_report_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="cz_jmhz_submission_company_rule" model="ir.rule">
+        <field name="name">JMHZ podání: více firem</field>
+        <field name="model_id" ref="model_cz_jmhz_submission"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

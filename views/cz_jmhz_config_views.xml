@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cz_jmhz_year_param_view_list" model="ir.ui.view">
+        <field name="name">cz.jmhz.year.param.list</field>
+        <field name="model">cz.jmhz.year.param</field>
+        <field name="arch" type="xml">
+            <list editable="top" decoration-warning="not verified">
+                <field name="year" options="{'format': false}"/>
+                <field name="legal_limit"/>
+                <field name="taxpayer_credit"/>
+                <field name="tax_rate"/>
+                <field name="withholding_tax"/>
+                <field name="min_hourly_wage"/>
+                <field name="social_employer_rate" optional="hide"/>
+                <field name="social_employee_rate" optional="hide"/>
+                <field name="health_employer_rate" optional="hide"/>
+                <field name="health_employee_rate" optional="hide"/>
+                <field name="verified"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_year_param_action" model="ir.actions.act_window">
+        <field name="name">Parametry roku</field>
+        <field name="res_model">cz.jmhz.year.param</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p>Limity a sazby pro výpočet daně a kontroly. Každý prosinec doplňte nový rok podle vyhlášených hodnot.</p>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_tax_declaration_view_list" model="ir.ui.view">
+        <field name="name">cz.jmhz.tax.declaration.list</field>
+        <field name="model">cz.jmhz.tax.declaration</field>
+        <field name="arch" type="xml">
+            <list editable="top">
+                <field name="employee_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="document" filename="document_name" widget="binary"/>
+                <field name="document_name" column_invisible="True"/>
+                <field name="note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_tax_declaration_action" model="ir.actions.act_window">
+        <field name="name">Prohlášení poplatníka</field>
+        <field name="res_model">cz.jmhz.tax.declaration</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Zapište podepsané prohlášení poplatníka</p>
+            <p>S prohlášením se z odměny pod limitem počítá záloha se slevou na poplatníka (daň zpravidla 0 Kč).
+               Bez něj se v roce 2026 strhává 15% srážková daň. Prohlášení může brigádník mít v měsíci jen u jednoho plátce.</p>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_employee_action" model="ir.actions.act_window">
+        <field name="name">Brigádníci</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('jmhz_employment_ids', '!=', False)]</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+        <field name="help" type="html">
+            <p>Brigádníci s aspoň jednou dohodou o provedení práce. Nového brigádníka založte v Zaměstnancích
+               a pak mu vytvořte dohodu.</p>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_payroll_record_wizard_view_form" model="ir.ui.view">
+        <field name="name">cz.jmhz.payroll.record.wizard.form</field>
+        <field name="model">cz.jmhz.payroll.record.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="year" options="{'format': false}"/>
+                    <field name="employee_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="action_print" type="object" string="Tisknout" class="btn-primary"/>
+                    <button special="cancel" string="Zrušit"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="cz_jmhz_payroll_record_wizard_action" model="ir.actions.act_window">
+        <field name="name">Mzdový list</field>
+        <field name="res_model">cz.jmhz.payroll.record.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[(4, ref('cz_jmhz.group_cz_jmhz_manager'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="http://schemas.cssz.cz/JMHZ/podani/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:bt="http://schemas.cssz.cz/baseTypes/v2"
+           xmlns:so="http://schemas.cssz.cz/JMHZ/souhrn/1.0"
+           xmlns:pvpoj="http://schemas.cssz.cz/JMHZ/PVPOJ/1.0"
+           xmlns:form="http://schemas.cssz.cz/JMHZ/form/1.0"
+           targetNamespace="http://schemas.cssz.cz/JMHZ/podani/1.0" elementFormDefault="qualified"
+           version="1.4.3">
+
+  <xs:import namespace="http://schemas.cssz.cz/JMHZ/souhrn/1.0" schemaLocation="souhrn.xsd"/>
+  <xs:import namespace="http://schemas.cssz.cz/JMHZ/PVPOJ/1.0" schemaLocation="PVPOJ.xsd"/>
+  <xs:import namespace="http://schemas.cssz.cz/JMHZ/form/1.0" schemaLocation="form.xsd"/>
+  <xs:import namespace="http://schemas.cssz.cz/baseTypes/v2" schemaLocation="baseTypes2.xsd"/>
+
+  <xs:annotation>
+    <xs:documentation>
+XML schéma podání na DIS jednotného měsíčního hlášení zaměstnavatele
+<p/>
+Verze 1.4.0,    01.08.2025 - změna typu elementu poradi (ID 10440)
+                01.08.2025 - přidán element slevyZamestnancuOvoZel a přidán popis k souvisejícím elementům (ID 10543, ID 10544, ID 10545)
+                01.08.2025 - přejmenován element zuctovano na odmenyNerezident (ID 10416)
+                01.08.2025 - změna popisu některých elementů
+Verze 1.4.1,    26.08.2025 - změna maximálního počtu formulářů v balíku dat (ID 10015)
+                26.08.2025 - změna pořadí elementů slevaZamestnavatele a slevaZamestnance
+                26.08.2025 - změna typu elementu obec (ID 10229)
+                28.08.2025 - změna popisu u elementů mesic (ID 10537) a rok (ID 10538)
+                28.08.2025 - vrácen element funkcniPozitky (ID 10247)
+                02.09.2025 - odstranění duplicitního elementu vylouceneDny pro form vezen
+Verze 1.4.2,    17.09.2025 - změna povinnosti (na povinné) elementů zdravPojZamestnavatel, zdravPojZamestnanec, eldpSeznam
+                17.09.2025 - změna povinnosti (na nepovinné) elementů odpracovaneHodinyType > rozpad, prescas (ID 10269), dan, zakladDane (ID 10535)
+Verze 1.4.3,    15.10.2025 - opraven popis u elementů uhrnVymerovacichZakladu (ID 10544) a pojistneSleva (ID 10545)
+                17.10.2025 - formVezen - přidání chybějícího elementu pocetDnu (ID 10356), odstranění duplicitního elementu odecitaneDny
+                20.10.2025 - formBezPriznaku - přidání elementů odmenyNerezident (ID 10416), odmenaNerezident (ID 10308) a srazenaDanNerezident (ID 10310)
+                29.10.2025 - formPestoun, formCinnostKS, formOdlozenyPrijem - přidání elementu prijemNepojistenaCinnost (ID 10476)
+                29.10.2025 - formBezPriznaku - změna povinnosti (na nepovinný) elementu dnyOdpracovanePocet (ID 10267)
+                29.10.2025 - formOdlozenyPrijem - přidání elementu Typ Odloženého příjmu (ID 10548)
+                29.10.2025 - formSouhrn - oprava datového typu elementu typ (ID 10408)
+                29.10.2025 - změna povinnosti (na nepovinné) elementů	ELDP: kod (ID 10240), platnostOd (ID 10241), platnostDo (ID 10242)
+                29.10.2025 - převedení xs:enumeration na externí číselník pro elementy duvodUplatneni (ID 10374), formaVlastnictvi (ID 10220) a typKolektSmlouvy (ID 10214)
+                03.11.2025 - formBezPriznaku - přesunutí komplexních elementů z formCommonTypes: odpracovaneDnyType, neodpracovaneHodinyType, prekazkyVPraciType
+Verze 1.4.3.1,  01.12.2025 - změna povinnosti (na nepovinný) elementu primarniPpv (ID 10495)
+Verze 1.4.3.2,  08.12.2025 - formOdlozenyPrijem - odstranění komplexního elementu vykonavanaPozice
+Verze 1.4.3.3,  25.03.2026 - změna povinnosti (na nepovinný) elementu rocniZuctovaniZadost (ID 10319)
+Verze 1.4.3.4,  25.03.2026 - přidána restrikce minLength u typů: jmenoType, prijmeniType, idPpvType a v elementu kategorizaceRizika (ID 10247)
+Verze 1.4.3.5,  01.06.2026 - msgPodani - přidány nepovinné elementy produktNazev a produktVerze (odpovídající elementu VENDOR)
+Verze 1.4.3.6,  03.08.2026 - formCommonTypes - změna povinnosti (na nepovinný) elementu zakladDane (ID 10307)
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="jmhz" type="jmhzType"/>
+  <xs:complexType name="jmhzType">
+    <xs:sequence>
+      <xs:element name="VENDOR" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:attribute name="productName" type="xs:string"/>
+          <xs:attribute name="productVersion" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SENDER" minOccurs="0" maxOccurs="1">
+        <xs:complexType>
+          <xs:attribute name="EmailNotifikace" type="xs:string"/>
+          <xs:attribute name="ISDSreport" type="xs:string"/>
+          <xs:attribute name="VerzeProtokolu" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="hlavicka" type="podaniHlavickaType"/>
+      <xs:element ref="so:souhrn" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Souhrnná vrstva</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="pvpoj:PVPOJ" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Přehled o výši pojistného</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="formulareOsob" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation/>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:annotation>
+              <xs:documentation/>
+            </xs:annotation>
+            <xs:element name="formularOsoby" maxOccurs="1500">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="hlavicka" type="formularHlavickaType"/>
+                  <xs:choice minOccurs="0">
+                    <xs:element ref="form:bezPriznaku"/>
+                    <xs:element ref="form:pestoun"/>
+                    <xs:element ref="form:cinnostKS"/>
+                    <xs:element ref="form:vezen"/>
+                    <xs:element ref="form:mezinarodniPronajemSily"/>
+                    <xs:element ref="form:jinyPrijem"/>
+                    <xs:element ref="form:ozpTpp"/>
+                    <xs:element ref="form:odlozenyPrijem"/>
+                  </xs:choice>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="verze" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>Verze datové věty
+Verze datové věty odpovídající XSD version ve formátu XX.YY.ZZ</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="podaniHlavickaType">
+    <xs:sequence>
+      <xs:element name="idPodani" type="guidType">
+        <xs:annotation>
+          <xs:documentation>GUID podání
+(ID podání ve tvaru GUID)
+DS: Meta atributy > Podání (ID 10001)
+Unikátní GUID pro Měsiční hlášení generovaný na straně ZEL.
+Generuje klient je stejné za celé mesícní hlášení</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="typPodani" type="typType">
+        <xs:annotation>
+          <xs:documentation>Typ podání
+DS:Meta atributy > Podání (ID 10007)
+R - Řádné
+O - Opravné
+S - Storno
+Předpoklad logické kontroly v L1 - záznamy k METAP_PODANI_ID + METAP_BALIK_PORADI by měly mít shodný Typ podání</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="variabilniSymbol">
+        <xs:annotation>
+          <xs:documentation>Variabilní symbol zaměstnavatele
+DS: Zaměstnavatel  / Škola / Vzdělávací zařízení  (ID 10221)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNNType">
+            <xs:length value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="mesic">
+        <xs:annotation>
+          <xs:documentation>Měsíc
+DS:Meta atributy > Podání (ID 10010)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNType">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="12"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="rok">
+        <xs:annotation>
+          <xs:documentation>Rok
+DS:Meta atributy > Podání (ID 10011)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNType">
+            <xs:minInclusive value="2023"/>
+            <xs:maxInclusive value="2100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="datumVyplneni" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>Datum a čas vyplnění podání
+Datum a čas podání zákazníkem
+DS: Meta atributy > Podání (ID 10005)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="balikPoradi" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Pořadí balíku dat
+DS: Meta atributy > Podání (ID 10002)
+Pořadí balíku dat pro Měsiční hlášení určuje ZEL.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNType">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="999"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="balikyPocet" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet balíků dat
+DS: Meta atributy > Podání (ID 10003)
+Počet balíků dat pro Měsiční hlášení určuje ZEL.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNType">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="999"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="formularePocetVBaliku" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet formulářů v balíku dat
+DS: Meta atributy > Podání (ID 10015)
+Počet formulářů (včetně souhrnu a PVPOJ) v balíku dat pro měsíční hlášení - určuje ZEL.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="bt:simpleNType">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="1502"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="formularePocetCelkem" type="bt:simpleNType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet formulářů celkem
+DS: Meta atributy > Podání (ID 10488)
+Počet formulářů celkem (včetně souhrnu a PVPOJ) pro měsíční hlášení - určuje ZEL.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="formularHlavickaType">
+    <xs:sequence>
+      <xs:element name="idFormulare" type="guidType">
+        <xs:annotation>
+          <xs:documentation>GUID formuláře (ID  podání ve tvaru GUID)
+DS: Meta atributy > Formulář (ID 10012)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="typFormulare" type="typType">
+        <xs:annotation>
+          <xs:documentation>Číselník typ formuláře
+DS: Meta atributy > Formulář (ID 10016)
+R - Ŕádný
+O - Opravný
+S - Storno
+Obecné použití ve vrstvě Žurnál zprávy (využívá se pro formuláře i souhrn)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="primarniPpv" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Primární pracovněprávní vztah zaměstnance
+DS: Meta atributy > Formulář (ID 10495)
+Příznak označující pracovněprávní vztah, který bude nosičem souhrnných dat zaměstnance.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="guidType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="R"/>
+      <xs:enumeration value="O"/>
+      <xs:enumeration value="S"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

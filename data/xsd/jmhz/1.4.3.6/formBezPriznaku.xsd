@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://schemas.cssz.cz/JMHZ/form/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://schemas.cssz.cz/JMHZ/form/1.0" elementFormDefault="qualified"
+           version="1.4.3">
+
+  <xs:include schemaLocation="formCommonTypes.xsd"/>
+
+  <xs:element name="bezPriznaku" type="bezPriznakuType"/>
+  <xs:complexType name="bezPriznakuType">
+    <xs:annotation>
+      <xs:documentation>DATOVÝ SCÉNÁŘ V MĚSÍČNÍM HLÁŠENÍ PODLE DRUHU ČINNOSTI:
+1 až 9 s příznakem 10502 = "žádné"; A až J; T až ZC</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="identifikace" type="identifikaceType"/>
+      <xs:element name="souhrnDataZec" type="souhrnDataZecBezPriznakuType" minOccurs="0"/>
+      <xs:element name="pojisteni" type="pojisteniBezPriznakuType"/>
+      <xs:element name="vykonavanaPozice" type="vykonavanaPoziceType"/>
+      <xs:element name="prubehZamestnani" type="prubehZamestnaniBezPriznakuType"/>
+      <xs:element name="prijem" type="prijemType"/>
+      <xs:element name="mzda" type="mzdaBezPriznakuType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="souhrnDataZecBezPriznakuType">
+    <xs:sequence>
+      <xs:element name="prijmy" type="prijmyBezPriznakuType"/>
+      <xs:element name="zalohaNaDan" type="zalohaNaDanType" minOccurs="0"/>
+      <xs:element name="zvlastniSazbaDane" type="zvlastniSazbaDaneBezPriznakuType" minOccurs="0"/>
+      <xs:element name="prohlaseniPoplatnika" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Prohlášení poplatníka daně z příjmů ze závislé činnosti
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10419)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="prohlaseniPoplatnikaDane" type="prohlaseniPoplatnikaDaneType" minOccurs="0"/>
+      <xs:element name="rocniUhrny" type="rocniUhrnyType" minOccurs="0"/>          
+      <xs:element name="mzdaCista" type="mzdaCistaBezPriznakuType"/>
+      <xs:element name="zdravPojZamestnavatel" type="zdravPojZamestnavatelType" />
+      <xs:element name="zdravPojZamestnanec" type="zdravPojZamestnanecType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="prijmyBezPriznakuType">
+    <xs:complexContent>
+      <xs:extension base="prijmyType">
+        <xs:sequence>
+          <xs:element name="odmenyNerezident" type="cislo8Type" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Zúčtovaný příjem - z toho odměny členů orgánů právnických osob, kteří jsou daňovými nerezidenty ČR
+DS: Souhrnná data zaměstnance > Příjem (ID 10416)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="prispevekZamestnavatele" type="prispevekZamestnavateleType" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="zvlastniSazbaDaneBezPriznakuType">
+    <xs:complexContent>
+      <xs:extension base="zvlastniSazbaDaneType">
+        <xs:sequence>
+          <xs:element name="odmenaNerezident" type="cislo14Type" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>Odměna člena (nerezidenta) orgánu právnické osoby
+DS: Souhrnná data zaměstnance > Výpočet daně podle zvláštní sazby daně (ID 10308)</xs:documentation>
+             </xs:annotation>
+           </xs:element>
+           <xs:element name="srazenaDanNerezident" type="cislo14Type" minOccurs="0">
+             <xs:annotation>
+               <xs:documentation>Sražená záloha na daň z příjmu nerezidenta člena orgánu právnické osoby
+DS: Souhrnná data zaměstnance > Výpočet daně podle zvláštní sazby daně (ID 10310)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="mzdaCistaBezPriznakuType">
+    <xs:complexContent>
+      <xs:extension base="mzdaCistaType">
+        <xs:sequence>
+          <xs:element name="vydelekOZP" type="vydelekOsobOZPType" minOccurs="0"/>
+          <xs:element name="srazky" type="srazkyType" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="pojisteniBezPriznakuType">
+    <xs:sequence>
+      <xs:element name="trvani" type="trvaniType"/> 
+      <xs:element name="vymerovaciZaklad" type="vymerovaciZakladType" minOccurs="0"/>
+      <xs:element name="vymerovaciZakladParagraf5" type="vymerovaciZakladParagraf5Type" minOccurs="0"/>
+      <xs:element name="eldpSeznam" type="eldpType"/>
+      <xs:element name="pojisteniZamestnanec" type="pojisteniZamestnanecType" minOccurs="0"/>
+      <xs:element name="pojisteniZamestnavatel" type="pojisteniZamestnavatelType" minOccurs="0"/>
+      <xs:element name="slevaZamestnance" type="slevaZamestnanceType" minOccurs="0"/>
+      <xs:element name="slevaZamestnavatele" type="slevaZamestnavateleType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="prubehZamestnaniBezPriznakuType">
+    <xs:sequence>
+      <xs:element name="odpracovaneDny" type="odpracovaneDnyType"/>
+      <xs:element name="odpracovaneHodiny" type="odpracovaneHodinyType"/>
+      <xs:element name="neodpracovaneHodiny" type="neodpracovaneHodinyType" minOccurs="0"/>
+      <xs:element name="prekazkyVPraci" type="prekazkyVPraciType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="odpracovaneDnyType">
+    <xs:annotation>
+      <xs:documentation>Odpracované dny</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="dnyEvidencniStav" type="cislo3Type">
+        <xs:annotation>
+          <xs:documentation>Počet dní v evidenčním stavu
+DS: Průběh zaměstnání v daném měsíci > Odpracované dny (ID 10265)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="dnyOdpracovanePocet" type="cislo3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet odpracovaných dnů
+DS: Průběh zaměstnání v daném měsíci > Odpracované dny (ID 10267)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="neodpracovaneHodinyType">
+    <xs:annotation>
+        <xs:documentation>Neodpracované hodiny</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="hodinyNeodpracCelkem" type="cislo8_3Type">
+        <xs:annotation>
+          <xs:documentation>Celkový počet neodpracovaných hodin
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10275)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hodinyNeodpracNahrada" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet neodpracovaných hodin s náhradou či nekrácením mzdy
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10276)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hodinyNeodpracBezNahrady" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet neodpracovaných hodin v důsledku dočasné pracovní neschopnosti bez náhrady mzdy hrazené zaměstnavatelem
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10277)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hodinyNeodpracNeschop" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet neodpracovaných hodin z důvodu dočasné pracovní neschopnosti, za které je ze strany zaměstnavatele poskytována náhrada mzdy
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10278)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hodinyNeodpracDovol" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet neodpracovaných hodin v důsledku čerpání dovolené na zotavenou
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10279)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="hodinyNeodpracOcr" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Počet neodpracovaných hodin v důsledku ošetřování dítěte nebo péče o ně nebo ošetřování jiného člena domácnosti, za které náleží ošetřovné
+DS: Průběh zaměstnání v daném měsíci > Neodpracované hodiny (ID 10280)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="prekazkyVPraciType">
+    <xs:annotation>
+      <xs:documentation>Překážky v práci</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="prekazkaZamestnanec" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Důvod - zaměstnanec
+DS: Průběh zaměstnání v daném měsíci > Překážky v práci (ID 10471)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="prekazkaZamestnavatel" type="cislo8_3Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Důvod - zaměstnavatel
+DS: Průběh zaměstnání v daném měsíci > Překážky v práci (ID 10472)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="mzdaBezPriznakuType">
+    <xs:sequence>
+      <xs:element name="mzdaZuctovana" type="cislo8Type">
+        <xs:annotation>
+          <xs:documentation>Mzda zúčtovaná
+DS: Mzda > Mzda zúčtovaná (ID 10328)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mzdaRozpad" type="mzdaRozpadType" minOccurs="0"/>
+      <xs:element name="nahrady" type="nahradyType" minOccurs="0"/>
+      <xs:element name="odmeny" type="odmenyType" minOccurs="0"/>
+      <xs:element name="vydelek">
+        <xs:complexType>
+         <xs:sequence>
+           <xs:element name="vydelekPrumernyHod" type="cislo11_3Type">
+             <xs:annotation>
+               <xs:documentation>Průměrný (hrubý) hodinový výdělek
+DS: Mzda > Výdělek (ID 10345)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

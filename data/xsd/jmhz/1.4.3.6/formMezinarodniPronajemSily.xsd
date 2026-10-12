@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://schemas.cssz.cz/JMHZ/form/1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://schemas.cssz.cz/JMHZ/form/1.0" elementFormDefault="qualified"
+           version="1.4.3">
+
+  <xs:include schemaLocation="formCommonTypes.xsd"/>
+
+  <xs:element name="mezinarodniPronajemSily" type="mezinarodniPronajemSilyType"/>
+  <xs:complexType name="mezinarodniPronajemSilyType">
+    <xs:annotation>
+      <xs:documentation>DATOVÝ SCÉNÁŘ V MĚSÍČNÍM HLÁŠENÍ PODLE DRUHU ČINNOSTI:
+12</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="identifikace" type="identifikaceType"/>
+      <xs:element name="souhrnDataZec" type="souhrnDataZecMpsType" minOccurs="0"/>
+      <xs:element name="prijem" type="prijemType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="souhrnDataZecMpsType">
+    <xs:sequence>
+      <xs:element name="prijmy">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation>Příjem</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="zuctovanoCelkem" type="cislo14Type">
+              <xs:annotation>
+                <xs:documentation>Zúčtovaný příjem - celkem
+DS: Souhrnná data zaměstnance > Příjem (ID 10286)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="zalohaNaDan" minOccurs="0">
+        <xs:complexType>
+          <xs:annotation>
+            <xs:documentation>Výpočet zálohy na daň</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="zakladDane" type="cislo14Type" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Základ pro výpočet zálohy na daň
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10297)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="vypoctenaZaloha" type="cislo14Type" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Vypočtená záloha na daň
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10298)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="danZalohaPoSleve" type="cislo14Type" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Skutečně sražená záloha na daň po uplatnění slev
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10305)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="zvlastniSazbaDane" type="zvlastniSazbaDaneType" minOccurs="0"/>
+      <xs:element name="prohlaseniPoplatnika" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Prohlášení poplatníka daně z příjmů ze závislé činnosti
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10419)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="prohlaseniPoplatnikaDane" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Prohlášení poplatníka daně z příjmů ze závislé činnosti</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="zakladniSleva" type="cislo14Type" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Základní sleva na poplatníka
+DS: Souhrnná data zaměstnance > Výpočet zálohy na daň (ID 10299)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="rocniUhrny" type="rocniUhrnyMpsType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="rocniUhrnyMpsType">
+    <xs:annotation>
+      <xs:documentation>Roční úhrny jednotlivých položek</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="prijemSrazkDanZvlSazba" type="cislo14Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Příjmy podléhající srážkové dani podle zvláštní sazby daně vyplacené nebo obdržené do 31.1. následujícího roku
+DS: Souhrnná data zaměstnance > Roční úhrny jednotlivých položek (ID 10311)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="danSrazenaZvlSazba" type="cislo14Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Skutečně sražená daň podle zvláštní sazby daně / rok
+DS: Souhrnná data zaměstnance > Roční úhrny jednotlivých položek (ID 10312)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="prijemZdanitelnyCelkem" type="cislo14Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zdanitelné příjmy v ČR vyplacené nebo obdržené do 31.1. následujícího roku - příjmy zdaněné zálohou na daň celkem
+DS: Souhrnná data zaměstnance > Roční úhrny jednotlivých položek (ID 10313)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="zalohaPrijmy" type="cislo14Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Skutečně sražená záloha na daň z příjmů vyplacených nebo obdržených do 31.1. následujícího roku
+DS: Souhrnná data zaměstnance > Roční úhrny jednotlivých položek (ID 10317)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="rocniZuctovaniZadost" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Zaměstnanec požádal o provedení ročního zúčtování
+DS: Souhrnná data zaměstnance > Roční zúčtování (ID 10319)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="rocniZuctovaniProvedeno" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Roční zúčtování záloh bylo provedeno
+DS: Souhrnná data zaměstnance > Roční zúčtování (ID 10320)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="vysledekRocnihoZuctovani" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Výsledek ročního zúčtování</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="preplatekRok" type="cisloN14Type">
+              <xs:annotation>
+                <xs:documentation>Přeplatek nebo nedoplatek z ročního zúčtování
+DS: Souhrnná data zaměstnance > Výsledek ročního zúčtování (ID 10321)</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
