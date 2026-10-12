@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_jmhz_employments" type="object" class="oe_stat_button" icon="fa-file-text-o"
+                <button name="action_jmhz_employments" type="object" class="oe_stat_button" icon="contract"
                         groups="cz_jmhz.group_cz_jmhz_manager" invisible="not jmhz_employment_count">
                     <field name="jmhz_employment_count" widget="statinfo" string="Dohody"/>
                 </button>
@@ -29,7 +29,8 @@
                             <field name="country_of_birth"/>
                             <field name="sex" string="Pohlaví"/>
                             <field name="country_id" string="Státní občanství"/>
-                            <field name="ssnid" string="Rodné číslo"/>
+                            <field name="identification_id" string="Rodné číslo"
+                                   help="Standardní identifikační číslo zaměstnance (záložka Osobní). U brigádníků s českým občanstvím rodné číslo, povinné pro přihlášku na ČSSZ."/>
                         </group>
                         <group string="Trvalý pobyt">
                             <field name="private_street" string="Ulice (bez čísla)"/>

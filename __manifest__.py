@@ -19,15 +19,15 @@ o provedení práce. Hlavní pracovní poměr ani DPČ modul nezná.
 
 Do docházky ani kiosku modul nezasahuje, docházku jen čte.
 """,
-    "version": "19.0.1.0.0",
+    "version": "20.0.1.0.0",
     "category": "Human Resources",
     "author": "Matouš Čmelík",
     "license": "LGPL-3",
-    "depends": ["hr", "hr_attendance", "hr_hourly_cost", "mail"],
+    "depends": ["hr", "hr_attendance", "mail"],
     "external_dependencies": {"python": ["lxml"]},
     "data": [
         "security/cz_jmhz_security.xml",
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "data/cz_jmhz_year_param_data.xml",
         "data/ir_cron.xml",
         "views/cz_jmhz_report_views.xml",

@@ -15,27 +15,5 @@
         <field name="comment">Dohody o provedení práce, přihlášky na ČSSZ a měsíční hlášení JMHZ včetně osobních údajů brigádníků.</field>
     </record>
 
-    <record id="cz_jmhz_employment_company_rule" model="ir.rule">
-        <field name="name">JMHZ dohody: více firem</field>
-        <field name="model_id" ref="model_cz_jmhz_employment"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="cz_jmhz_report_company_rule" model="ir.rule">
-        <field name="name">JMHZ hlášení: více firem</field>
-        <field name="model_id" ref="model_cz_jmhz_report"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="cz_jmhz_report_line_company_rule" model="ir.rule">
-        <field name="name">JMHZ řádky hlášení: více firem</field>
-        <field name="model_id" ref="model_cz_jmhz_report_line"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="cz_jmhz_submission_company_rule" model="ir.rule">
-        <field name="name">JMHZ podání: více firem</field>
-        <field name="model_id" ref="model_cz_jmhz_submission"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
+    <!-- Přístupová práva i pravidla více firem jsou od Odoo 20 v security/ir.access.csv (model ir.access). -->
 </odoo>

@@ -63,8 +63,10 @@ class HrEmployee(models.Model):
     jmhz_pension_type = fields.Selection(PENSION_TYPES, "Pobíraný důchod", groups=MANAGER)
     jmhz_pension_from = fields.Date("Důchod od", groups=MANAGER)
     jmhz_pension_early = fields.Boolean("Předčasný starobní důchod", groups=MANAGER)
-    jmhz_tax_residence_id = fields.Many2one(
-        "res.country", "Daňová rezidence", groups=MANAGER, default=lambda self: self.env.ref("base.cz"))
+    # Výchozí Česko se doplňuje v default_get jen Správci JMHZ: default přímo na poli s groups shodí
+    # založení zaměstnance každému HR úředníkovi bez skupiny JMHZ (AccessError, chyba už v 19).
+    # Prázdná daňová rezidence se v podání bere jako CZ.
+    jmhz_tax_residence_id = fields.Many2one("res.country", "Daňová rezidence", groups=MANAGER)
     jmhz_ik_mpsv = fields.Char(
         "Osobní identifikační číslo (OIČ)", groups=MANAGER, copy=False, tracking=True,
         help="Desetimístné číslo (IK MPSV), které ČSSZ přidělí po přihlášce. Najdete ho v protokolu nebo na "
@@ -74,6 +76,14 @@ class HrEmployee(models.Model):
         "cz.jmhz.tax.declaration", "employee_id", "Prohlášení poplatníka", groups=MANAGER)
     jmhz_employment_count = fields.Integer(compute="_compute_jmhz_employment_count", groups=MANAGER)
 
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+        if ("jmhz_tax_residence_id" in fields_list and "jmhz_tax_residence_id" not in values
+                and self.has_field_access(self._fields["jmhz_tax_residence_id"], "write")):
+            values["jmhz_tax_residence_id"] = self.env.ref("base.cz").id
+        return values
+
     @api.depends("jmhz_employment_ids")
     def _compute_jmhz_employment_count(self):
         for employee in self:
@@ -81,6 +91,10 @@ class HrEmployee(models.Model):
 
     @api.onchange("name")
     def _onchange_name_jmhz(self):
+        # Pole JMHZ vidí jen Správce JMHZ; HR úředníkovi bez té skupiny by onchange při psaní jména
+        # spadl na AccessError (chyba už v 19), proto se pro něj nic nepředvyplňuje.
+        if not self.has_field_access(self._fields["jmhz_first_name"], "write"):
+            return
         for employee in self:
             if employee.name and not (employee.jmhz_first_name or employee.jmhz_last_name):
                 first, last = self._split_name(employee.name)
@@ -100,7 +114,8 @@ class HrEmployee(models.Model):
         return self.jmhz_first_name or first, self.jmhz_last_name or last
 
     def _jmhz_birth_number(self) -> str:
-        return re.sub(r"\D", "", self.ssnid or "")
+        # Odoo 20 zrušilo pole ssnid; rodné číslo je standardní identifikační číslo (identification_id).
+        return re.sub(r"\D", "", self.identification_id or "")
 
     def _jmhz_registration_errors(self) -> list[str]:
         """Co chybí pro přihlášku (REGZEC akce 1) podle povinných atributů A1-OST."""

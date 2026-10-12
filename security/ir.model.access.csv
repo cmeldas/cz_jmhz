@@ -1,8 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_cz_jmhz_year_param_manager,cz.jmhz.year.param manager,model_cz_jmhz_year_param,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_tax_declaration_manager,cz.jmhz.tax.declaration manager,model_cz_jmhz_tax_declaration,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_employment_manager,cz.jmhz.employment manager,model_cz_jmhz_employment,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_report_manager,cz.jmhz.report manager,model_cz_jmhz_report,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_report_line_manager,cz.jmhz.report.line manager,model_cz_jmhz_report_line,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_submission_manager,cz.jmhz.submission manager,model_cz_jmhz_submission,group_cz_jmhz_manager,1,1,1,1
-access_cz_jmhz_payroll_record_wizard_manager,cz.jmhz.payroll.record.wizard manager,model_cz_jmhz_payroll_record_wizard,group_cz_jmhz_manager,1,1,1,1

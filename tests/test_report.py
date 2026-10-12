@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import base64
 from datetime import date
 
 from freezegun import freeze_time
@@ -33,10 +32,10 @@ class TestJmhzReport(TransactionCase):
         })
         cls.calendar = cls.env["resource.calendar"].create({
             "name": "Brigádníci (flexibilní)",
-            "flexible_hours": True,
+            # Odoo 20: flexibilní rozvrh je calendar_type "undefined", časové pásmo už kalendář nemá.
+            "calendar_type": "undefined",
             "hours_per_day": 8,
             "full_time_required_hours": 40,
-            "tz": "Europe/Prague",
         })
         czech = cls.env.ref("base.cz")
         cls.employee = cls.env["hr.employee"].create({
@@ -49,7 +48,7 @@ class TestJmhzReport(TransactionCase):
             "country_of_birth": czech.id,
             "country_id": czech.id,
             "sex": "female",
-            "ssnid": "055301/5555",
+            "identification_id": "055301/5555",
             "private_street": "Lhota",
             "jmhz_house_number": "12",
             "private_zip": "391 11",
@@ -85,7 +84,7 @@ class TestJmhzReport(TransactionCase):
         return report
 
     def _xml(self, submission):
-        return base64.b64decode(submission.xml_file)
+        return submission.xml_file.content
 
     def test_period_is_first_day(self):
         self.assertEqual(self._report().period, SEPTEMBER)
@@ -192,6 +191,27 @@ class TestJmhzReport(TransactionCase):
         report.line_ids.amount = 1300
         self.assertEqual(report.state, "draft")
         self.assertFalse(report.submission_ids.filtered(lambda s: s.state == "ready"))
+
+    def test_print_payslip_and_payroll_record(self):
+        """QWeb šablony výplatní pásky a mzdového listu se v Odoo 20 vykreslí (t-call, rodné číslo)."""
+        report = self._report()
+        report.line_ids.amount = 1275
+        Report = self.env["ir.actions.report"]
+        payslip, _kind = Report._render_qweb_html("cz_jmhz.action_report_payslip", report.line_ids.ids)
+        payslip = payslip.decode()
+        self.assertIn("Výplatní páska za 09/2026", payslip)
+        self.assertIn("Jana Nováková", payslip)
+        record, _kind = Report._render_qweb_html(
+            "cz_jmhz.action_report_payroll_record", self.employee.ids, data={"year": 2026})
+        record = record.decode()
+        self.assertIn("Mzdový list za rok 2026", record)
+        self.assertIn("055301/5555", record)
+        self.assertIn("09/2026", record)
+        wizard = self.env["cz.jmhz.payroll.record.wizard"].with_context(
+            active_model="hr.employee", active_ids=self.employee.ids).create({"year": 2026})
+        self.assertEqual(wizard.employee_ids, self.employee)
+        action = wizard.with_context(discard_logo_check=True).action_print()
+        self.assertEqual((action["report_name"], action["data"]), ("cz_jmhz.report_payroll_record", {"year": 2026}))
 
     def test_registration_submission(self):
         employment = self.env["cz.jmhz.employment"].create({

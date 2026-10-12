@@ -5,7 +5,6 @@
         <field name="model">cz.jmhz.report.line</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">cz_jmhz.report_payslip</field>
-        <field name="report_file">cz_jmhz.report_payslip</field>
         <field name="print_report_name">'Vyplatni_paska_%s_%s' % (object.employee_id.name, object.period.strftime('%Y_%m'))</field>
         <field name="binding_model_id" ref="model_cz_jmhz_report_line"/>
         <field name="binding_type">report</field>
@@ -16,13 +15,12 @@
         <field name="model">hr.employee</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">cz_jmhz.report_payroll_record</field>
-        <field name="report_file">cz_jmhz.report_payroll_record</field>
         <field name="print_report_name">'Mzdovy_list_%s' % (object.name)</field>
     </record>
 
     <template id="report_payslip_document">
+        <t t-set="employee" t-value="line.employee_id.sudo()"/>
         <t t-call="web.external_layout">
-            <t t-set="employee" t-value="line.employee_id.sudo()"/>
             <div class="page">
                 <h3>Výplatní páska za <t t-out="line.period.strftime('%m/%Y')"/></h3>
                 <p>
@@ -74,7 +72,7 @@
                         <div class="row mb-3">
                             <div class="col-6">
                                 <strong>Brigádník:</strong> <t t-out="employee.name"/><br/>
-                                <strong>Rodné číslo:</strong> <t t-out="employee.ssnid or ''"/><br/>
+                                <strong>Rodné číslo:</strong> <t t-out="employee.identification_id or ''"/><br/>
                                 <strong>Datum narození:</strong> <t t-out="employee.birthday and employee.birthday.strftime('%d. %m. %Y') or ''"/><br/>
                                 <strong>Trvalý pobyt:</strong>
                                 <t t-out="' '.join(filter(None, [employee.private_street, employee.jmhz_house_number]))"/>,

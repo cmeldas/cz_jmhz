@@ -1,0 +1,12 @@
+id,name,model_id,group_id/id,operation,domain
+access_cz_jmhz_year_param_manager,cz.jmhz.year.param manager,cz.jmhz.year.param,cz_jmhz.group_cz_jmhz_manager,crud,
+access_cz_jmhz_tax_declaration_manager,cz.jmhz.tax.declaration manager,cz.jmhz.tax.declaration,cz_jmhz.group_cz_jmhz_manager,crud,
+access_cz_jmhz_employment_manager,cz.jmhz.employment manager,cz.jmhz.employment,cz_jmhz.group_cz_jmhz_manager,crud,
+cz_jmhz_employment_company_rule,JMHZ dohody: více firem,cz.jmhz.employment,,crud,"[('company_id', 'in', company_ids)]"
+access_cz_jmhz_report_manager,cz.jmhz.report manager,cz.jmhz.report,cz_jmhz.group_cz_jmhz_manager,crud,
+cz_jmhz_report_company_rule,JMHZ hlášení: více firem,cz.jmhz.report,,crud,"[('company_id', 'in', company_ids)]"
+access_cz_jmhz_report_line_manager,cz.jmhz.report.line manager,cz.jmhz.report.line,cz_jmhz.group_cz_jmhz_manager,crud,
+cz_jmhz_report_line_company_rule,JMHZ řádky hlášení: více firem,cz.jmhz.report.line,,crud,"[('company_id', 'in', company_ids)]"
+access_cz_jmhz_submission_manager,cz.jmhz.submission manager,cz.jmhz.submission,cz_jmhz.group_cz_jmhz_manager,crud,
+cz_jmhz_submission_company_rule,JMHZ podání: více firem,cz.jmhz.submission,,crud,"[('company_id', 'in', company_ids)]"
+access_cz_jmhz_payroll_record_wizard_manager,cz.jmhz.payroll.record.wizard manager,cz.jmhz.payroll.record.wizard,cz_jmhz.group_cz_jmhz_manager,crud,

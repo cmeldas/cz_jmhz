@@ -114,7 +114,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="fa-file-code-o">
+                        <button name="action_view_submissions" type="object" class="oe_stat_button" icon="send">
                             <field name="submission_count" widget="statinfo" string="Podání"/>
                         </button>
                     </div>

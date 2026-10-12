@@ -31,7 +31,7 @@ def person_form(amount, mode, ids=True, form_type="R", hours=40.0):
 def build(forms, submission_type="R"):
     header = jmh_xml.Header(
         guid=str(uuid.uuid4()), submission_type=submission_type, variable_symbol="1234567890", year=2026, month=9,
-        filled_at=datetime(2026, 10, 8, 10, 0, tzinfo=timezone.utc), product_version="19.0.1.0.0", email="a@b.cz")
+        filled_at=datetime(2026, 10, 8, 10, 0, tzinfo=timezone.utc), product_version="20.0.1.0.0", email="a@b.cz")
     return jmh_xml.to_bytes(jmh_xml.build_mh(header, forms))
 
 

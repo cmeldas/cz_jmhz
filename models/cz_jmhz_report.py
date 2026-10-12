@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import uuid
-from datetime import datetime, time, timedelta
+from datetime import UTC, datetime, time, timedelta
+from zoneinfo import ZoneInfo
 
-import pytz
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
@@ -218,7 +218,7 @@ class CzJmhzReport(models.Model):
             variable_symbol=company.jmhz_variable_symbol,
             year=self.period.year,
             month=self.period.month,
-            filled_at=datetime.now(pytz.utc),
+            filled_at=datetime.now(UTC),
             product_version=Submission._product_version(),
             email=company.jmhz_notification_email or "",
         )
@@ -441,9 +441,10 @@ class CzJmhzReportLine(models.Model):
         self.ensure_one()
         if not (self.date_from and self.date_to):
             return False, 0.0, 0
-        tz = pytz.timezone(self.employee_id.tz or self.env.user.tz or "Europe/Prague")
-        start = tz.localize(datetime.combine(self.date_from, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
-        end = tz.localize(datetime.combine(self.date_to + timedelta(days=1), time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+        # Odoo 20 už pytz nepoužívá, časová pásma přes zoneinfo; datumy v databázi jsou dál naivní UTC.
+        tz = ZoneInfo(self.employee_id.tz or self.env.user.tz or "Europe/Prague")
+        start = datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+        end = datetime.combine(self.date_to + timedelta(days=1), time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         attendances = self.env["hr.attendance"].sudo().search([
             ("employee_id", "=", self.employee_id.id),
             ("check_in", ">=", start),
@@ -451,7 +452,7 @@ class CzJmhzReportLine(models.Model):
             ("check_out", "!=", False),
         ])
         hours = round(sum(attendances.mapped("worked_hours")), 2)
-        days = len({pytz.utc.localize(attendance.check_in).astimezone(tz).date() for attendance in attendances})
+        days = len({attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date() for attendance in attendances})
         return bool(attendances), hours, days
 
     def _load_attendance(self):

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import base64
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 
 from ..lib import xsd
 
@@ -55,7 +54,8 @@ class CzJmhzSubmission(models.Model):
         errors = xsd.validate(kind, xml)
         return self.create({
             **vals,
-            "xml_file": base64.b64encode(xml),
+            # Odoo 20: binární pole berou BinaryValue (surové bajty), ne base64.
+            "xml_file": BinaryBytes(xml, filename=vals.get("xml_filename") or ""),
             "xsd_version": xsd.default_version(kind),
             "xsd_errors": "\n".join(errors) or False,
             "state": "invalid" if errors else "ready",
